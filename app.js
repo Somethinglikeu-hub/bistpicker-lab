@@ -23,12 +23,13 @@ const FALLBACK = {
 
 async function load() {
   try {
-    // v2 engine manifest: bistpicker-v2 repo gh-pages branch'inden
-    const r = await fetch('https://raw.githubusercontent.com/Somethinglikeu-hub/bistpicker-v2/gh-pages/manifest.json', {cache:'no-store'});
+    // v2 motor manifest: bistpicker-v2 repo gh-pages branch'inden.
+    // engine_v2_state.json PWA uyumlu formatta (regime, positions, vb.)
+    const r = await fetch('https://raw.githubusercontent.com/Somethinglikeu-hub/bistpicker-v2/gh-pages/engine_v2_state.json', {cache:'no-store'});
     if (!r.ok) throw new Error(r.status);
     return await r.json();
   } catch (e) {
-    console.warn('state fetch failed, fallback:', e);
+    console.warn('v2 state fetch failed, fallback:', e);
     return FALLBACK;
   }
 }
