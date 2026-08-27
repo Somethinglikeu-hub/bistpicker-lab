@@ -23,7 +23,8 @@ const FALLBACK = {
 
 async function load() {
   try {
-    const r = await fetch('engine_v2_state.json', {cache:'no-store'});
+    // v2 engine manifest: bistpicker-v2 repo gh-pages branch'inden
+    const r = await fetch('https://raw.githubusercontent.com/Somethinglikeu-hub/bistpicker-v2/gh-pages/manifest.json', {cache:'no-store'});
     if (!r.ok) throw new Error(r.status);
     return await r.json();
   } catch (e) {
