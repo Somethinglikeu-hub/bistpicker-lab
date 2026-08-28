@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "BIST Picker — Mobil Portföy Takip",
-  "short_name": "BistPicker",
+  "name": "Deneysel Picker — Mobil Portföy Takip (v2 motor)",
+  "short_name": "Deneysel Picker",
   "description": "Borsa İstanbul değer yatırımı disiplinlerini ve momentum filtrelerini çalıştıran akıllı portföy.",
   "lang": "tr",
   "dir": "ltr",
