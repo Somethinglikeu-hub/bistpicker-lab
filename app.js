@@ -14,7 +14,12 @@ let activeDetailTicker = null;
 let livePriceRefreshTimer = null;
 let returnCostSettings = PortfolioCosts.normalizeSettings();
 
-const LIVE_PRICE_FEED_URL = 'https://raw.githubusercontent.com/Somethinglikeu-hub/MobileInv-feed/live-data/live_prices.json';
+// v2: Deneysel motorun feed URL'leri (paralel evren — MobileInv-feed'den bagimsiz)
+// v2 Pages acildiktan sonra: https://somethinglikeu-hub.github.io/bistpicker-v2
+const V2_BASE = 'https://somethinglikeu-hub.github.io/bistpicker-v2';
+const LIVE_PRICE_FEED_URL = V2_BASE + '/live_prices.json';
+const MANIFEST_URL = V2_BASE + '/manifest.json';
+const MOBILE_SNAPSHOT_URL = V2_BASE + '/mobile_snapshot.db.gz';
 const LIVE_PRICE_REFRESH_MS = 60_000;
 const LIVE_PRICE_REQUEST_TIMEOUT_MS = 7_000;
 const RECENT_QUOTE_MAX_AGE_MS = 45 * 60_000;
@@ -531,7 +536,7 @@ async function fetchWithProgress(url, onProgress, options = {}) {
 }
 
 async function downloadSnapshot(manifest, onProgress) {
-  const downloadUrl = `./${manifest.snapshot.filename}?t=${Date.now()}`;
+  const downloadUrl = `${V2_BASE}/${manifest.snapshot.filename}?t=${Date.now()}`;
   const arrayBuffer = await fetchWithProgress(downloadUrl, onProgress);
 
   if (arrayBuffer.byteLength !== manifest.snapshot.size_bytes) {
@@ -2867,7 +2872,7 @@ async function initApp() {
     
     let manifest = null;
     try {
-      const res = await fetch('./manifest.json?t=' + Date.now(), { cache: 'no-store' });
+      const res = await fetch(MANIFEST_URL + '?t=' + Date.now(), { cache: 'no-store' });
       if (res.ok) {
         manifest = validateSnapshotManifest(await res.json());
         window.feedManifest = manifest;

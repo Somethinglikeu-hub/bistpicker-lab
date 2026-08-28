@@ -1,0 +1,57 @@
+name: Sync v2 motor state to lab Pages
+
+on:
+  repository_dispatch:
+    types: [v2-state-updated]
+  workflow_dispatch:
+  schedule:
+    # her sabah v2 motorun yeni dosyalarini lab'a kopyala
+    - cron: "0 8 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: v2 motorun dosyalarini lab'in gh-pages branch'ine kopyala
+        run: |
+          set -euxo pipefail
+          # v2 motorun gh-pages'inden dosyalari cek (public degil, token ile)
+          # Bu workflow'u v2 motoru tetikler ya da schedule bekler
+          echo "v2 -> lab sync basladi"
+
+          git config --global user.name "lab-sync-bot"
+          git config --global user.email "lab-sync@users.noreply.github.com"
+
+          # v2 motor repo'yu klonla (sadece v2'nin gh-pages branch'i)
+          git clone --depth 1 --branch gh-pages \
+            https://x-access-token:${GH_TOKEN}@github.com/Somethinglikeu-hub/bistpicker-v2.git v2-feed
+
+          # Lab'in kendi repo'sunu klonla
+          git clone --depth 1 --branch gh-pages \
+            https://x-access-token:${GH_TOKEN}@github.com/Somethinglikeu-hub/bistpicker-lab.git lab-feed
+
+          # v2'nin dosyalarini lab'in gh-pages'ine kopyala
+          cd v2-feed
+          for f in manifest.json engine_v2_state.json live_prices.json live_tickers.json; do
+            if [ -f "$f" ]; then
+              cp "$f" ../lab-feed/
+              echo "kopyalandi: $f"
+            fi
+          done
+          # v2'nin pwa dosyalarini lab'in uzerine yazma (lab zaten kendi PWA'si var)
+          # skip - lab kendi PWA'sini koruyacak
+          cd ../lab-feed
+          # mevcut PWA dosyalari degismeyecek
+          git add manifest.json engine_v2_state.json live_prices.json live_tickers.json
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "v2 motor: state sync"
+            git push origin gh-pages
+            echo "lab gh-pages guncellendi"
+          else
+            echo "degisiklik yok"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.LAB_SYNC_TOKEN }}
