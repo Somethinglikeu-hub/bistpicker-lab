@@ -17,6 +17,9 @@ h1{font-size:1.25rem;margin-bottom:4px}
 .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:12px}
 .regime{font-weight:700}
 .regime.on{color:#3fb950}.regime.off{color:#f85149}
+.perf{font-weight:700}.perf.pos{color:#3fb950}.perf.neg{color:#f85149}.perf.flat{color:#8b949e}
+.kv{display:flex;justify-content:space-between;padding:4px 0;font-size:.85rem}
+.kv b{font-weight:600}
 table{width:100%;border-collapse:collapse;font-size:.9rem}
 th{color:#8b949e;text-align:left;font-size:.72rem;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid #30363d}
 td{padding:8px 4px;border-bottom:1px solid #21262d}
@@ -27,6 +30,8 @@ tr:last-child td{border-bottom:none}
 .rules b{color:#c9d1d9}
 .warn{background:#30200c;border-color:#9e6a03}
 .warn .t{color:#f0883e;font-weight:700;font-size:.8rem;margin-bottom:4px}
+.btn{background:#1f6feb;color:#fff;border:0;border-radius:6px;padding:6px 12px;font-size:.8rem;cursor:pointer;margin-top:6px}
+.btn:hover{background:#388bfd}
 footer{margin-top:18px;font-size:.7rem;color:#484f58;text-align:center}
 </style>
 </head>
@@ -41,8 +46,22 @@ footer{margin-top:18px;font-size:.7rem;color:#484f58;text-align:center}
 </div>
 
 <div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <b>Portföy Performansı</b>
+    <span id="perfStatus" class="perf flat">—</span>
+  </div>
+  <div class="kv"><span>Ortalama getiri</span><b id="avgReturn" class="perf flat">—</b></div>
+  <div class="kv"><span>XU100 (aynı dönem)</span><b id="xu100Return" class="perf flat">—</b></div>
+  <div class="kv"><span>Alpha</span><b id="alpha" class="perf flat">—</b></div>
+  <div class="kv"><span>Kazanan / Kaybeden</span><b id="winsLosses">—</b></div>
+  <div class="kv"><span>En iyi / En kötü</span><b id="bestWorst">—</b></div>
+  <div class="kv"><span>Son güncelleme</span><b id="perfAsOf">—</b></div>
+  <button class="btn" onclick="editPrices()">Fiyatları güncelle</button>
+</div>
+
+<div class="card">
   <table>
-    <thead><tr><th>#</th><th>Hisse</th><th>Fiyat*</th><th>Skor</th><th>Ağırlık</th></tr></thead>
+    <thead><tr><th>#</th><th>Hisse</th><th>Giriş</th><th>Güncel</th><th>Getiri</th><th>Skor</th></tr></thead>
     <tbody id="rows"></tbody>
   </table>
   <div class="rules" style="margin-top:8px">* DB fiyatları <b id="dataDate">—</b> tarihinde — emir öncesi güncel fiyatı kontrol et.</div>
