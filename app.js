@@ -72,20 +72,26 @@ function calcPerformance(state) {
   if (!state || !state.positions) return null;
   const overrides = getOverridePrices();
   const positions = state.positions.map(p => {
-    const cur = overrides[p.ticker] !== undefined ? overrides[p.ticker] : p.price;
-    return { ...p, current_price: cur, return_pct: (cur / p.price - 1) * 100 };
+    const overridePrice = overrides[p.ticker];
+    const cur = overridePrice !== undefined ? overridePrice : p.price;
+    const hasEntry = p.price !== null && p.price !== undefined;
+    const hasCurrent = cur !== null && cur !== undefined;
+    const ret = (hasEntry && hasCurrent) ? (cur / p.price - 1) * 100 : null;
+    return { ...p, current_price: cur, return_pct: ret, has_entry: hasEntry, has_current: hasCurrent };
   });
   if (!positions.length) return null;
-  const avg = positions.reduce((s,p) => s + p.return_pct, 0) / positions.length;
-  const wins = positions.filter(p => p.return_pct > 0).length;
-  const losses = positions.filter(p => p.return_pct < 0).length;
-  const best = positions.reduce((a,b) => a.return_pct > b.return_pct ? a : b);
-  const worst = positions.reduce((a,b) => a.return_pct < b.return_pct ? a : b);
-  // XU100: yoksa null goster
+  const validRets = positions.filter(p => p.return_pct !== null).map(p => p.return_pct);
+  const avg = validRets.length ? validRets.reduce((s,r) => s+r, 0) / validRets.length : null;
+  const wins = positions.filter(p => p.return_pct !== null && p.return_pct > 0).length;
+  const losses = positions.filter(p => p.return_pct !== null && p.return_pct < 0).length;
+  const enteredCount = positions.filter(p => p.has_entry).length;
+  const validPositions = positions.filter(p => p.return_pct !== null);
+  const best = validPositions.length ? validPositions.reduce((a,b) => a.return_pct > b.return_pct ? a : b) : null;
+  const worst = validPositions.length ? validPositions.reduce((a,b) => a.return_pct < b.return_pct ? a : b) : null;
   const xu = state.xu100_return_pct !== undefined ? state.xu100_return_pct : null;
   return {
-    avg, xu, alpha: xu !== null ? avg - xu : null,
-    wins, losses,
+    avg, xu, alpha: (avg !== null && xu !== null) ? avg - xu : null,
+    wins, losses, enteredCount, totalCount: positions.length,
     best, worst,
     as_of: overrides._updated || state.data_date || state.generated || '—',
     positions
@@ -110,26 +116,53 @@ function render(state) {
 
   // performance
   const perf = calcPerformance(state);
+  const dataNote = state.data_note || state.data_status || null;
   if (perf) {
-    document.getElementById('avgReturn').innerHTML = fmtPct(perf.avg);
-    document.getElementById('xu100Return').innerHTML = perf.xu !== null ? fmtPct(perf.xu) : '<span class="perf flat">yok</span>';
-    document.getElementById('alpha').innerHTML = perf.alpha !== null ? fmtPct(perf.alpha) : '<span class="perf flat">—</span>';
-    document.getElementById('winsLosses').textContent = `${perf.wins} / ${perf.losses}`;
-    document.getElementById('bestWorst').textContent = `${perf.best.ticker} ${perf.best.return_pct >= 0 ? '+' : ''}${perf.best.return_pct.toFixed(1)}% / ${perf.worst.ticker} ${perf.worst.return_pct >= 0 ? '+' : ''}${perf.worst.return_pct.toFixed(1)}%`;
+    if (dataNote) {
+      document.getElementById('avgReturn').innerHTML = `<span class="perf flat">veri yok</span>`;
+      document.getElementById('xu100Return').innerHTML = perf.xu !== null ? fmtPct(perf.xu) : '<span class="perf flat">yok</span>';
+      document.getElementById('alpha').innerHTML = '<span class="perf flat">—</span>';
+      document.getElementById('winsLosses').textContent = `0 / 0`;
+      document.getElementById('bestWorst').textContent = '—';
+      document.getElementById('perfStatus').innerHTML = `<span class="perf flat">fiyat gir</span>`;
+    } else {
+      document.getElementById('avgReturn').innerHTML = perf.avg !== null ? fmtPct(perf.avg) : '<span class="perf flat">—</span>';
+      document.getElementById('xu100Return').innerHTML = perf.xu !== null ? fmtPct(perf.xu) : '<span class="perf flat">yok</span>';
+      document.getElementById('alpha').innerHTML = perf.alpha !== null ? fmtPct(perf.alpha) : '<span class="perf flat">—</span>';
+      document.getElementById('winsLosses').textContent = `${perf.wins} / ${perf.losses}`;
+      document.getElementById('bestWorst').textContent = (perf.best && perf.worst)
+        ? `${perf.best.ticker} ${perf.best.return_pct >= 0 ? '+' : ''}${perf.best.return_pct.toFixed(1)}% / ${perf.worst.ticker} ${perf.worst.return_pct >= 0 ? '+' : ''}${perf.worst.return_pct.toFixed(1)}%`
+        : '—';
+      document.getElementById('perfStatus').innerHTML = perf.alpha !== null ? fmtPct(perf.alpha) : (perf.avg !== null ? fmtPct(perf.avg) : '<span class="perf flat">—</span>');
+    }
     document.getElementById('perfAsOf').textContent = perf.as_of;
-    const status = perf.alpha !== null
-      ? (perf.alpha > 0 ? `+${perf.alpha.toFixed(1)}pp alpha` : `${perf.alpha.toFixed(1)}pp alpha`)
-      : `${perf.avg >= 0 ? '+' : ''}${perf.avg.toFixed(1)}%`;
-    document.getElementById('perfStatus').innerHTML = fmtPct(perf.alpha !== null ? perf.alpha : perf.avg);
   }
 
-  document.getElementById('rows').innerHTML = perf.positions.map(p => `
-    <tr><td>${p.rank}</td>
+  document.getElementById('rows').innerHTML = perf.positions.map(p => {
+    const entryCell = p.has_entry ? p.price.toFixed(2) : '<span style="color:#8b949e">—</span>';
+    const curCell = p.has_current ? p.current_price.toFixed(2) : '<span style="color:#f0883e">gir</span>';
+    const retCell = p.return_pct !== null
+      ? `<span class="perf ${p.return_pct > 0 ? 'pos' : p.return_pct < 0 ? 'neg' : 'flat'}">${p.return_pct >= 0 ? '+' : ''}${p.return_pct.toFixed(2)}%</span>`
+      : '<span style="color:#8b949e">—</span>';
+    return `<tr><td>${p.rank}</td>
     <td><span class="tk">${p.ticker}</span><br><span style="font-size:.68rem;color:#8b949e">${p.name||''}</span></td>
-    <td>${p.price.toFixed(2)}</td>
-    <td>${p.current_price.toFixed(2)}</td>
-    <td class="perf ${p.return_pct > 0 ? 'pos' : p.return_pct < 0 ? 'neg' : 'flat'}">${p.return_pct >= 0 ? '+' : ''}${p.return_pct.toFixed(2)}%</td>
-    <td class="score">${p.score.toFixed(1)}</td></tr>`).join('');
+    <td>${entryCell}</td>
+    <td>${curCell}</td>
+    <td>${retCell}</td>
+    <td class="score">${p.score.toFixed(1)}</td></tr>`;
+  }).join('');
+
+  // data note uyarisi
+  let note = document.getElementById('dataNoteBanner');
+  if (dataNote && !note) {
+    note = document.createElement('div');
+    note.id = 'dataNoteBanner';
+    note.className = 'card warn';
+    note.innerHTML = `<div class="t">⚠ Veri notu</div><div class="rules">${dataNote}</div>`;
+    document.querySelector('h1').after(note);
+  } else if (!dataNote && note) {
+    note.remove();
+  }
 }
 
 load().then(render);
