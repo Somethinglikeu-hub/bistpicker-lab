@@ -5,7 +5,7 @@
   "schema_version": 1,
   "snapshot": {
     "filename": "mobile_snapshot.db.gz",
-    "url": "https://raw.githubusercontent.com/Somethinglikeu-hub/bistpicker-v2/gh-pages/mobile_snapshot.db.gz",
+    "url": "https://somethinglikeu-hub.github.io/bistpicker-lab/mobile_snapshot.db.gz",
     "sha256": "bb3eb3eeb9a41365212c68ea0a409c391169db7232ecce27ad26f17ba290d6fa",
     "size_bytes": 10127723,
     "compression": "gzip"
