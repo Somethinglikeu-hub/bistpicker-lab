@@ -1,0 +1,20 @@
+{
+  "snapshot_version": 2,
+  "exported_at": "2026-08-31T11:05:34.474544+00:00",
+  "engine": "bistpicker-v2",
+  "schema_version": 1,
+  "snapshot": {
+    "filename": "mobile_snapshot.db.gz",
+    "url": "https://raw.githubusercontent.com/Somethinglikeu-hub/bistpicker-v2/gh-pages/mobile_snapshot.db.gz",
+    "sha256": "bb3eb3eeb9a41365212c68ea0a409c391169db7232ecce27ad26f17ba290d6fa",
+    "size_bytes": 10127723,
+    "compression": "gzip"
+  },
+  "live_tickers": {
+    "latest_price_date": "2026-08-28"
+  },
+  "rotation": {
+    "cycle_start": "2026-08-28",
+    "rotation_weeks": 4
+  }
+}

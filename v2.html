@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BistPicker Lab</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117">
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,Roboto,sans-serif;padding:16px;max-width:640px;margin:0 auto}
+h1{font-size:1.25rem;margin-bottom:4px}
+.sub{color:#8b949e;font-size:.8rem;margin-bottom:16px}
+.badge{display:inline-block;background:#238636;color:#fff;border-radius:12px;padding:2px 10px;font-size:.7rem;vertical-align:middle;margin-left:6px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:12px}
+.regime{font-weight:700}
+.regime.on{color:#3fb950}.regime.off{color:#f85149}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{color:#8b949e;text-align:left;font-size:.72rem;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid #30363d}
+td{padding:8px 4px;border-bottom:1px solid #21262d}
+tr:last-child td{border-bottom:none}
+.tk{font-weight:700}
+.score{color:#58a6ff}
+.rules{font-size:.78rem;color:#8b949e;line-height:1.5}
+.rules b{color:#c9d1d9}
+.warn{background:#30200c;border-color:#9e6a03}
+.warn .t{color:#f0883e;font-weight:700;font-size:.8rem;margin-bottom:4px}
+footer{margin-top:18px;font-size:.7rem;color:#484f58;text-align:center}
+</style>
+</head>
+<body>
+<h1>BistPicker LAB <span class="badge">YENİ MOTOR v2</span></h1>
+<div class="sub">Deneme reposu — ana sistemden bağımsız | Veri kaynağı: engine_v2_state.json</div>
+
+<div class="card">
+  <div>Rejim durumu (XU100 vs 200MA): <span id="regime" class="regime on">—</span></div>
+  <div style="font-size:.75rem;color:#8b949e;margin-top:2px">Pozisyon: <span id="exposure">—</span></div>
+  <div style="font-size:.75rem;color:#8b949e">Son rebalans: <span id="rebal">—</span> · Sonraki: ay sonu yeni skor</div>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>#</th><th>Hisse</th><th>Fiyat*</th><th>Skor</th><th>Ağırlık</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="rules" style="margin-top:8px">* DB fiyatları <b id="dataDate">—</b> tarihinde — emir öncesi güncel fiyatı kontrol et.</div>
+</div>
+
+<div class="card warn">
+  <div class="t">ÇIKIŞ KURALLARI (fiyat-stop yok)</div>
+  <div class="rules">
+    • Temel bozulma: piotroski &lt;5 veya hisse 200MA altına düşerse çık<br>
+    • Zaman-stop: 3 ay XU100'ü yenmeyen pozisyon çık<br>
+    • Buffer: top-20'de kalan tutulur, yeni girişler top-10'dan<br>
+    • Likidite: günlük ciro'nun %1'inden fazla yükleme yapma
+  </div>
+</div>
+
+<div class="card">
+  <div class="rules"><b>MOTOR KURALLARI:</b><br>
+  Skor = momentum %50 + buffett %25 + graham %15 · technical = binary trend teyidi · piotroski = kalite filtresi<br>
+  Aylık rebalans · 8 hisse eşit ağırlık · Walk-forward dış örnek testi: +94% vs XU100 +40% (2025-2026.07)</div>
+</div>
+
+<footer>BistPicker Lab · deneme iterasyon repo'sundan üretilir · ana MobileInv'e dokunmaz</footer>
+<script src="app.js"></script>
+</body>
+</html>

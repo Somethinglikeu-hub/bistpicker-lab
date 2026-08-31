@@ -1,0 +1,106 @@
+{
+  "as_of": "2026-08-28",
+  "entry_date": "2026-08-28",
+  "portfolio_size": 8,
+  "regime": "OPEN",
+  "exposure_pct": 100,
+  "note": "PWA entry fiyatlarina kiyasla guncel fiyatlari manual/auto override ile hesaplar (localStorage)",
+  "v2_positions": [
+    {
+      "rank": 1,
+      "ticker": "PCILT",
+      "name": "PC İLETİŞİM VE MEDYA HİZMETLERİ SANAYİ TİCARET A.Ş.",
+      "sector": "media",
+      "free_float_pct": 37.71,
+      "score": 83.44,
+      "mom_score": 93.6,
+      "buf_score": 88.8,
+      "gra_score": 96.3,
+      "price": 34.6
+    },
+    {
+      "rank": 2,
+      "ticker": "AKFIS",
+      "name": "AKFEN İNŞAAT TURİZM VE TİCARET A.Ş.",
+      "sector": "construction",
+      "free_float_pct": 10.49,
+      "score": 76.91,
+      "mom_score": 94.4,
+      "buf_score": 61.8,
+      "gra_score": 95.0,
+      "price": 18.65
+    },
+    {
+      "rank": 3,
+      "ticker": "RYSAS",
+      "name": "REYSAŞ TAŞIMACILIK VE LOJİSTİK TİCARET A.Ş.",
+      "sector": "logistics",
+      "free_float_pct": 31.95,
+      "score": 75.96,
+      "mom_score": 89.1,
+      "buf_score": 92.9,
+      "gra_score": 54.4,
+      "price": 27.02
+    },
+    {
+      "rank": 4,
+      "ticker": "SANEL",
+      "name": "SAN-EL MÜHENDİSLİK ELEKTRİK TAAHHÜT SANAYİ VE TİCARET A.Ş.",
+      "sector": "industrial_manufacturing",
+      "free_float_pct": 83.58,
+      "score": 75.29,
+      "mom_score": 78.3,
+      "buf_score": 87.3,
+      "gra_score": 95.4,
+      "price": 55.85
+    },
+    {
+      "rank": 5,
+      "ticker": "AYGAZ",
+      "name": "AYGAZ A.Ş.",
+      "sector": "energy_oil_gas",
+      "free_float_pct": 23.65,
+      "score": 74.98,
+      "mom_score": 83.1,
+      "buf_score": 88.0,
+      "gra_score": 76.3,
+      "price": 328.75
+    },
+    {
+      "rank": 6,
+      "ticker": "ARASE",
+      "name": "DOĞU ARAS ENERJİ YATIRIMLARI A.Ş.",
+      "sector": "energy_power",
+      "free_float_pct": 17.46,
+      "score": 74.82,
+      "mom_score": 82.6,
+      "buf_score": 79.6,
+      "gra_score": 90.9,
+      "price": 121.8
+    },
+    {
+      "rank": 7,
+      "ticker": "CCOLA",
+      "name": "COCA-COLA İÇECEK A.Ş.",
+      "sector": "food_production",
+      "free_float_pct": 29.31,
+      "score": 74.4,
+      "mom_score": 77.5,
+      "buf_score": 99.4,
+      "gra_score": 72.2,
+      "price": 77.65
+    },
+    {
+      "rank": 8,
+      "ticker": "TCKRC",
+      "name": "KIRAÇ GALVANİZ TELEKOMİNİKASYON METAL MAKİNE İNŞAAT ELEKTRİK SANAYİ VE TİCARET A.Ş.",
+      "sector": "construction",
+      "free_float_pct": 34.63,
+      "score": 73.56,
+      "mom_score": 86.3,
+      "buf_score": 94.4,
+      "gra_score": 45.2,
+      "price": 164.0
+    }
+  ]
+}

@@ -17,9 +17,13 @@ let returnCostSettings = PortfolioCosts.normalizeSettings();
 // v2: Deneysel motorun feed URL'leri (paralel evren — MobileInv-feed'den bagimsiz)
 // v2 Pages acildiktan sonra: https://somethinglikeu-hub.github.io/bistpicker-v2
 const V2_BASE = 'https://somethinglikeu-hub.github.io/bistpicker-v2';
+const V2_FALLBACK_BASE = '.'; // public lab hosts local v2 state
 const LIVE_PRICE_FEED_URL = V2_BASE + '/live_prices.json';
+const LIVE_PRICE_FEED_FALLBACK = V2_FALLBACK_BASE + '/live_tickers_v2.json';
 const MANIFEST_URL = V2_BASE + '/manifest.json';
+const MANIFEST_FALLBACK = V2_FALLBACK_BASE + '/manifest_v2.json';
 const MOBILE_SNAPSHOT_URL = V2_BASE + '/mobile_snapshot.db.gz';
+const MOBILE_SNAPSHOT_FALLBACK = V2_FALLBACK_BASE + '/mobile_snapshot.db.gz';
 const LIVE_PRICE_REFRESH_MS = 60_000;
 const LIVE_PRICE_REQUEST_TIMEOUT_MS = 7_000;
 const RECENT_QUOTE_MAX_AGE_MS = 45 * 60_000;
